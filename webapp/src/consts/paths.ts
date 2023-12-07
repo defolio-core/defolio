@@ -3,5 +3,6 @@ export const PATHS = {
   index: '/',
   app: '/app',
   configureContract: '/configure-contract',
+  deploy: '/deploy',
   // PATHS - END
 } as const;
