@@ -2,6 +2,7 @@
   "name": "contracts",
   "version": "1.0.0",
   "scripts": {
+    "build": "hardhat export-abi",
     "test": "hardhat test",
     "deploy": "npx hardhat run scripts/deploy.ts"
   },
@@ -9,5 +10,8 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",
     "hardhat": "^2.17.1"
+  },
+  "dependencies": {
+    "hardhat-abi-exporter": "^2.10.1"
   }
 }
