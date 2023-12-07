@@ -31,6 +31,7 @@ export const DeployPage: FC<DeployPageProps> = () => {
   });
   useEffect(() => {
     if (txData && txData?.logs) {
+      console.log(txData);
       const logs = txData.logs;
       const topics = decodeEventLog({
         abi: deFolioSpaceFactoryABI,
@@ -45,7 +46,11 @@ export const DeployPage: FC<DeployPageProps> = () => {
   }, [navigate, txData]);
   const onSubmit = async () => {
     setLoading(true);
-    await writeAsync();
+    await writeAsync({
+      args: [
+        acc.address!,
+      ]
+    });
   };
 
   return (

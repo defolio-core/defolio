@@ -12,6 +12,10 @@ const config: HardhatUserConfig = {
     flat: true,
   },
   networks: {
+    local: {
+      url: process.env.LOCAL_URL,
+      accounts: [process.env.LOCAL_PRIVATE_KEY as string],
+    },
     testnet: {
       url: process.env.TESTNET_URL,
       accounts: [process.env.TESTNET_PRIVATE_KEY as string],

@@ -10,4 +10,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        String  @id @default(uuid())
+  address   String  @unique
+  firstName String?
+  lastName  String?
+  email     String?
+  spaces    Space[]
+}
 
+model Space {
+  id        String   @id @default(uuid())
+  name      String
+  logo      String?
+  address   String
+  slug      String   @unique
+  owner     User     @relation(fields: [ownerId], references: [id])
+  ownerId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
