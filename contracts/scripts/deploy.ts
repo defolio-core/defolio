@@ -1,12 +1,12 @@
 import { ethers } from "hardhat";
 
 async function main() {
-  const contract = await ethers.deployContract("MyContract");
+  const contract = await ethers.deployContract("DeFolioSpaceFactory");
 
   await contract.waitForDeployment();
 
   console.log(
-    `MyContract deployed to ${contract.target}`
+    `DeFolioSpaceFactory deployed to ${contract.target}`
   );
 }
 
