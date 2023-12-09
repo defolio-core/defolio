@@ -1,9 +1,11 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   Bars3Icon,
 } from "@heroicons/react/24/outline";
 import { Sidebar } from "./Sidebar";
 import { LoggedContainer } from "../../components/LoggedContainer";
+import { useCurrentSpace } from "../../hooks/useCurrentSpace";
+import { useNavigate } from "react-router-dom";
 
 export interface AppLayoutProps {
   title?: string;
@@ -12,10 +14,20 @@ export interface AppLayoutProps {
 
 export const AppLayout: FC<AppLayoutProps> = ({ children, title }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { space, isLoading: spaceIsLoading } = useCurrentSpace();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!spaceIsLoading && !space) {
+      navigate("/app/spaces");
+    }
+  }, [navigate, space, spaceIsLoading]);
+  if (!space) {
+    return "Loading..."; // TODO: use a loading spinner here
+  }
   return (
     <LoggedContainer>
       <div className="h-screen flex overflow-hidden bg-base-200">
-        <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+        <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} space={space} />
         <div className="flex flex-col w-0 flex-1 overflow-hidden">
           <div className="md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3">
             <button

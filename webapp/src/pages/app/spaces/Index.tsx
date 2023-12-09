@@ -3,26 +3,28 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // import { getProjects } from "../../../client/queries/spaces";
-import { useLocalStorage } from "@uidotdev/usehooks";
 import { getSpaces } from "../../../client/queries/spaces";
 import { SpaceAvatar } from "../../../components/SpaceAvatar";
 // import { ProjectAvatar } from "../../../components/ProjectAvatar";
+import { useSpaceId } from '../../../hooks/useSpaceId';
 
 export interface SpacesIndexProps {}
 
 export const SpacesIndex: FC<SpacesIndexProps> = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const [,setCurrentSpaceId] = useLocalStorage<string | null>('defolio-current-space-id', null);
-  const { data } = useQuery({
+  const [,setCurrentSpaceId] = useSpaceId();
+  const { data, isLoading } = useQuery({
     queryKey: ['spaces'],
-    queryFn: () => getSpaces(), // TODO: Implement backend for this
+    queryFn: () => getSpaces(),
   });
   const onSelectSpace = (spaceId: string) => {
     queryClient.clear();
     setCurrentSpaceId(spaceId);
     navigate('/app');
   };
+  console.log({ data });
+  if (isLoading || !data) return null;
   return (
     <div className="w-screen h-screen bg-base-200 flex items-center justify-center">
       <div className="shadow-sm bg-white rounded-md max-w-xl w-full">
