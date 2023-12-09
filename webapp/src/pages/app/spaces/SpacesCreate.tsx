@@ -39,7 +39,6 @@ export const SpacesCreate: FC<SpacesCreateProps> = () => {
   });
   useEffect(() => {
     if (txData && txData?.logs && formFieldsData) {
-      console.log(txData);
       const logs = txData.logs;
       const topics = decodeEventLog({
         abi: deFolioSpaceFactoryABI,
