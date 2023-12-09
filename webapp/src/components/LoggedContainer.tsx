@@ -15,7 +15,7 @@ export const LoggedContainer: FC<LoggedContainerProps> = ({ children }) => {
   const { signIn, isLoading: signInLoading } = useSignIn();
   const loading = meLoading || signInLoading;
 
-  if (!loading && me && account) {
+  if (!loading && me && account?.address) {
     return children;
   }
 
@@ -26,7 +26,7 @@ export const LoggedContainer: FC<LoggedContainerProps> = ({ children }) => {
           <div>
             <span className="loading loading-spinner loading-xs"></span>
           </div>
-        ) : !account ? (
+        ) : !account.address ? (
           <Web3Button />
         ) : (
           <button className="btn btn-primary" onClick={signIn}>
