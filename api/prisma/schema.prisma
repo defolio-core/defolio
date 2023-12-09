@@ -20,15 +20,27 @@ model User {
 }
 
 model Space {
-  id        String   @id @default(uuid())
-  name      String
-  logo      String?
-  address   String
-  slug      String   @unique
-  owner     User     @relation(fields: [ownerId], references: [id])
-  ownerId   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String             @id @default(uuid())
+  name         String
+  logo         String?
+  address      String
+  slug         String             @unique
+  owner        User               @relation(fields: [ownerId], references: [id])
+  ownerId      String
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  indexedPosts SpaceIndexedPost[]
+}
+
+model SpaceIndexedPost {
+  id      String @id @default(uuid())
+  space   Space  @relation(fields: [spaceId], references: [id])
+  spaceId String
+  title   String
+  slug    String
+  content String
+
+  @@unique([spaceId, slug])
 }
 
 model NonceSession {

@@ -8,6 +8,8 @@ import {
   ArrowPathRoundedSquareIcon,
   Cog8ToothIcon,
   DocumentTextIcon,
+PencilIcon,
+PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { SpaceAvatar } from "../../components/SpaceAvatar";
 import { Space } from "../../client/types";

@@ -3,7 +3,7 @@ import { SpacesModule } from './spaces/spaces.module';
 import { AuthModule } from './auth/auth.module';
 import { LoggedUserMiddleware } from './common/middlewares/logged-user.middleware';
 import { PrismaService } from './prisma.service';
-
+import { PostsModule } from './posts/posts.module';
 // IMPORTS - START
 // IMPORTS - END
 
@@ -12,6 +12,7 @@ import { PrismaService } from './prisma.service';
     // MODULE IMPORTS - START
     AuthModule,
     SpacesModule,
+    PostsModule,
     // MODULE IMPORTS - END
   ],
   controllers: [

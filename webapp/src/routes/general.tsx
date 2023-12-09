@@ -7,6 +7,7 @@ import { IndexPage } from "../pages/Index";
 import { AppIndexPage } from "../pages/app/Index";
 import { SpacesIndex } from "../pages/app/spaces/Index";
 import { SpacesCreate } from "../pages/app/spaces/SpacesCreate";
+import { PostsCreate } from '../pages/app/posts/PostsCreate';
 
 export const general: RouteObject[] = [
   // ROUTES - START
@@ -30,5 +31,9 @@ export const general: RouteObject[] = [
     path: '/app/spaces/create',
     element: <SpacesCreate />,
   },
+  {
+    path: '/app/posts/create',
+    element: <PostsCreate />
+  }
   // ROUTES - END
 ];

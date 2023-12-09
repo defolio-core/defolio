@@ -25,12 +25,14 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^7.1.16",
     "@prisma/client": "^5.7.0",
+    "axios": "^1.6.2",
     "class-validator": "^0.14.0",
     "jsonwebtoken": "^9.0.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "siwe": "^2.1.4",
-    "web3": "^4.3.0"
+    "web3": "^4.3.0",
+    "web3-eth": "^4.3.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
