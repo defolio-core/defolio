@@ -1,5 +1,8 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { SpacesModule } from './spaces/spaces.module';
+import { AuthModule } from './auth/auth.module';
+import { LoggedUserMiddleware } from './common/middlewares/logged-user.middleware';
+import { PrismaService } from './prisma.service';
 
 // IMPORTS - START
 // IMPORTS - END
@@ -7,6 +10,7 @@ import { SpacesModule } from './spaces/spaces.module';
 @Module({
   imports: [
     // MODULE IMPORTS - START
+    AuthModule,
     SpacesModule,
     // MODULE IMPORTS - END
   ],
@@ -16,7 +20,12 @@ import { SpacesModule } from './spaces/spaces.module';
   ],
   providers: [
     // MODULE PROVIDERS - START
+    PrismaService,
     // MODULE PROVIDERS - END
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  public configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(LoggedUserMiddleware).forRoutes('*');
+  }
+}

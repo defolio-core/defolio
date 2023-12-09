@@ -11,6 +11,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // APP SETUP - START
+  app.enableCors();
   const config = new DocumentBuilder()
     .setTitle('DeFolio API Documentation')
     .setVersion('1.0')
