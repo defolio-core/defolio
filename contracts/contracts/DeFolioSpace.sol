@@ -2,12 +2,14 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "hardhat/console.sol";
 
 contract DeFolioSpace {
     using Strings for uint256;
 
     address public owner;
     uint256 public totalPosts;
+    uint256 public totalScheduledSlugs;
 
     struct Post {
         uint256 postId;
@@ -15,11 +17,11 @@ contract DeFolioSpace {
         string ipfsCID;
         string slug;
         bool archived;
+        uint256 scheduledToTime;
     }
 
     mapping(uint256 => Post) public posts;
     mapping(string => uint256) public slugToPostId;
-
     modifier onlyOwner() {
         require(msg.sender == owner, "Only the owner can perform this action");
         _;
@@ -30,9 +32,9 @@ contract DeFolioSpace {
         totalPosts = 0;
     }
 
-    function publishPost(string memory _slug, string memory _ipfsCID) external onlyOwner {
+    function publishPost(string memory _slug, string memory _ipfsCID, uint256  _scheduledToTime) external onlyOwner {
         totalPosts++;
-        posts[totalPosts] = Post(totalPosts, block.timestamp, _ipfsCID, _slug, false);
+        posts[totalPosts] = Post(totalPosts, block.timestamp, _ipfsCID, _slug, false, _scheduledToTime);
         slugToPostId[_slug] = totalPosts;
     }
 
@@ -69,5 +71,14 @@ contract DeFolioSpace {
             posts[postId].ipfsCID,
             posts[postId].archived
         );
+    }
+
+    function isSomePostReadyToBePublished() external view returns (bool) {
+        for (uint256 i = 1; i <= totalPosts; i++) {
+            if (posts[i].scheduledToTime <= block.timestamp && !posts[i].archived && bytes(posts[i].ipfsCID).length == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }

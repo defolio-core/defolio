@@ -88,6 +88,19 @@
   },
   {
     "inputs": [],
+    "name": "isSomePostReadyToBePublished",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "owner",
     "outputs": [
       {
@@ -133,6 +146,11 @@
         "internalType": "bool",
         "name": "archived",
         "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "scheduledToTime",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -149,6 +167,11 @@
         "internalType": "string",
         "name": "_ipfsCID",
         "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_scheduledToTime",
+        "type": "uint256"
       }
     ],
     "name": "publishPost",
@@ -178,6 +201,19 @@
   {
     "inputs": [],
     "name": "totalPosts",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalScheduledSlugs",
     "outputs": [
       {
         "internalType": "uint256",

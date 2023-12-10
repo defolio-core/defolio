@@ -27,7 +27,12 @@ export const PostsCreate: FC<PostsCreateProps> = (props) => {
   const contractPublishPost = useDeFolioSpacePublishPost({
     address: space?.address as `0x${string}`,
   });
-  const form = useForm<CreatePostFormFields>();
+  const form = useForm<CreatePostFormFields>({
+    defaultValues: {
+      scheduled: false,
+      scheduledDate: new Date(),
+    }
+  });
   const onSubmit = async (data: CreatePostFormFields) => {
 
     const cid = await createPostMetadata({

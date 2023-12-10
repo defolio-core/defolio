@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useCurrentSpace } from "../../hooks/useCurrentSpace";
 import { Form, FormProps } from "../Form";
 import { FormGroup } from "../FormGroup";
@@ -5,11 +6,19 @@ import { ImageUploaderFormInput } from "./inputs/ImageUploaderFormInput";
 import { RichTextFormInput } from "./inputs/RichTextFormInput";
 import { TextFormInput } from "./inputs/TextFormInput";
 
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
+import { Controller } from "react-hook-form";
+import classNames from "classnames";
+
 export interface CreatePostFormFields {
   title: string;
   slug: string;
   cover: string;
   content: string;
+  scheduled: boolean;
+  scheduledDate: Date | null;
 }
 
 export interface CreatePostFormProps
@@ -42,9 +51,11 @@ export function CreatePostForm({
   ),
 }: CreatePostFormProps) {
   const { space } = useCurrentSpace();
+  const scheduled = form.watch("scheduled");
   return (
     <Form form={form} onSubmit={onSubmit}>
       <TextFormInput name="title" label="Title" type="text" />
+
       <FormGroup
         form={form}
         name="slug"
@@ -71,6 +82,42 @@ export function CreatePostForm({
       />
 
       <RichTextFormInput name="content" label="Content" />
+
+      <div className="mt-4 my-8">
+        <div className="max-w-md ">
+          <div className="flex items-center">
+            <input
+              id="scheduled"
+              type="checkbox"
+              className="checkbox"
+              {...form.register("scheduled")}
+            />
+            <label htmlFor="scheduled" className="label ml-2 cursor-pointer">
+              Schedule Post
+            </label>
+          </div>
+        </div>
+
+        <div className="mt-2">
+          <div className={classNames({ hidden: !scheduled })}>
+            <Controller
+              control={form.control}
+              name="scheduledDate"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <DatePicker
+                  selected={value}
+                  onChange={(date) => onChange(date)}
+                  onBlur={() => onBlur()}
+                  showTimeSelect
+                  className="input input-bordered"
+                  dateFormat={"MMMM d, yyyy h:mm aa"}
+                />
+              )}
+            />
+          </div>
+        </div>
+      </div>
+
       {footer}
     </Form>
   );

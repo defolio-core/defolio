@@ -7,10 +7,16 @@ import 'hardhat-abi-exporter';
 
 const config: HardhatUserConfig = {
   solidity: "0.8.19",
-  abiExporter: {
-    path: '../webapp/src/abi',
-    flat: true,
-  },
+  abiExporter: [
+    {
+      path: '../webapp/src/abi',
+      flat: true,
+    },
+    {
+      path: '../api/src/abi',
+      flat: true,
+    }
+  ],
   networks: {
     local: {
       url: process.env.LOCAL_URL,

@@ -132,7 +132,7 @@ export const RichText: FC<{
   hasError?: boolean;
 }> = ({ initialValue, onChange, onBlur, hasError }) => {
   return (
-    <div>
+    <div className="border rounded-lg">
       <div
         className={classNames(
           "border border-base-content border-opacity-0 bg-base-100 rounded-md overflow-hidden [&>div>.tiptap]:prose [&>div>.tiptap]:outline-none [&>div>.tiptap]:p-6",
