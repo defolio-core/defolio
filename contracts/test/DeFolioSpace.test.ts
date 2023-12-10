@@ -1,8 +1,9 @@
-import { ethers } from 'hardhat';
+import { ethers, network } from 'hardhat';
 import { time } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from 'chai';
 import { DeFolioSpace } from '../typechain-types';
 import { fakeCID } from './utils';
+
 
 describe('DeFolioSpace Contract', function () {
   let DeFolioSpace: DeFolioSpace;

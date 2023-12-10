@@ -1,0 +1,132 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_postId",
+        "type": "uint256"
+      }
+    ],
+    "name": "archivePost",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_postId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPost",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      },
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_slug",
+        "type": "string"
+      }
+    ],
+    "name": "getPostBySlug",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      },
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_slug",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_ipfsCID",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_scheduledToTime",
+        "type": "uint256"
+      }
+    ],
+    "name": "publishPost",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_scheduler",
+        "type": "address"
+      }
+    ],
+    "name": "setScheduler",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_postId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_ipfsCID",
+        "type": "string"
+      }
+    ],
+    "name": "updatePost",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

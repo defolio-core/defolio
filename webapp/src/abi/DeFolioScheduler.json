@@ -5,15 +5,49 @@
         "internalType": "address",
         "name": "_owner",
         "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_scheduler",
-        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "id",
+        "type": "bytes32"
+      }
+    ],
+    "name": "ChainlinkCancelled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "id",
+        "type": "bytes32"
+      }
+    ],
+    "name": "ChainlinkFulfilled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "id",
+        "type": "bytes32"
+      }
+    ],
+    "name": "ChainlinkRequested",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -61,79 +95,77 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "checkPostsReadyToBePublished",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "checkData",
+        "type": "bytes"
+      }
+    ],
+    "name": "checkUpkeep",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "upkeepNeeded",
+        "type": "bool"
+      },
+      {
+        "internalType": "bytes",
+        "name": "performData",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_postId",
+        "name": "postScheduleId",
         "type": "uint256"
       }
     ],
-    "name": "archivePost",
-    "outputs": [],
+    "name": "fetchPostCid",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_postId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getPost",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        "internalType": "bytes32",
+        "name": "_requestId",
+        "type": "bytes32"
       },
       {
         "internalType": "string",
-        "name": "",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      },
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_slug",
+        "name": "_cid",
         "type": "string"
       }
     ],
-    "name": "getPostBySlug",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      },
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "fulfillFetchPostCid",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -152,13 +184,36 @@
   {
     "inputs": [
       {
+        "internalType": "bytes",
+        "name": "performData",
+        "type": "bytes"
+      }
+    ],
+    "name": "performUpkeep",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
     ],
-    "name": "posts",
+    "name": "postSchedules",
     "outputs": [
+      {
+        "internalType": "address",
+        "name": "spaceAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "postSlug",
+        "type": "string"
+      },
       {
         "internalType": "uint256",
         "name": "postId",
@@ -166,49 +221,21 @@
       },
       {
         "internalType": "uint256",
-        "name": "date",
+        "name": "scheduledToTime",
         "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "ipfsCID",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "slug",
-        "type": "string"
       },
       {
         "internalType": "bool",
-        "name": "archived",
+        "name": "published",
         "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_slug",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_ipfsCID",
-        "type": "string"
       },
       {
         "internalType": "uint256",
-        "name": "_scheduledToTime",
+        "name": "attempts",
         "type": "uint256"
       }
     ],
-    "name": "publishPost",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -219,52 +246,7 @@
         "type": "bytes32"
       }
     ],
-    "name": "requestIdToSlug",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "scheduler",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_scheduler",
-        "type": "address"
-      }
-    ],
-    "name": "setScheduler",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "name": "slugToPostId",
+    "name": "requestIdToPostScheduleId",
     "outputs": [
       {
         "internalType": "uint256",
@@ -276,8 +258,31 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_postSlug",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_postId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_scheduledToTime",
+        "type": "uint256"
+      }
+    ],
+    "name": "schedulePost",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
-    "name": "totalPosts",
+    "name": "totalPostSchedules",
     "outputs": [
       {
         "internalType": "uint256",
@@ -297,24 +302,6 @@
       }
     ],
     "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_postId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "_ipfsCID",
-        "type": "string"
-      }
-    ],
-    "name": "updatePost",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
