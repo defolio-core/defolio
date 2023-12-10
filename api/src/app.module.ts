@@ -4,15 +4,17 @@ import { AuthModule } from './auth/auth.module';
 import { LoggedUserMiddleware } from './common/middlewares/logged-user.middleware';
 import { PrismaService } from './prisma.service';
 import { PostsModule } from './posts/posts.module';
-// IMPORTS - START
-// IMPORTS - END
+import { ChainlinkModule } from './chainlink/chainlink.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     // MODULE IMPORTS - START
+    ScheduleModule.forRoot(),
     AuthModule,
     SpacesModule,
     PostsModule,
+    ChainlinkModule,
     // MODULE IMPORTS - END
   ],
   controllers: [

@@ -33,14 +33,17 @@ model Space {
 }
 
 model SpaceIndexedPost {
-  id            String  @id @default(uuid())
-  space         Space   @relation(fields: [spaceId], references: [id])
-  spaceId       String
-  title         String
-  slug          String
-  cover         String?
-  content       String
-  authorAddress String?
+  id              String   @id @default(uuid())
+  space           Space    @relation(fields: [spaceId], references: [id])
+  spaceId         String
+  title           String
+  slug            String
+  cover           String?
+  content         String
+  authorAddress   String?
+  scheduled       Boolean  @default(false)
+  scheduledCid    String?
+  scheduledToDate DateTime?
 
   @@unique([spaceId, slug])
 }

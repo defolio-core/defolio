@@ -7,6 +7,9 @@ import { SpacesService } from '../spaces/spaces.service';
 
 import { getPostMetadata } from '../common/utils/postMetadata';
 import { FindAllPostsFilterDto } from './dto/find-all-posts-filter.dto';
+import { CreateScheduledPostDto } from './dto/create-scheduler-post.dto';
+import { Prisma, User } from '@prisma/client';
+import { Cron } from '@nestjs/schedule';
 
 const DefolioSpaceAbiJson = fs.readFileSync(
   path.join(__dirname, '../abi/DeFolioSpace.json'),
@@ -14,6 +17,33 @@ const DefolioSpaceAbiJson = fs.readFileSync(
 );
 
 const DefolioSpaceAbi = JSON.parse(DefolioSpaceAbiJson);
+
+const applyPostWhereFilterFromUserContext = (
+  user: User | null,
+  where: Prisma.SpaceIndexedPostWhereInput,
+) => {
+  where.OR = [
+    {
+      scheduled: false,
+    },
+  ];
+
+  if (user) {
+    where.OR.push({
+      OR: [
+        {
+          space: {
+            owner: {
+              address: {
+                equals: user?.address,
+              },
+            },
+          },
+        },
+      ],
+    });
+  }
+};
 
 @Injectable()
 export class PostsService {
@@ -66,11 +96,68 @@ export class PostsService {
     });
   }
 
+  @Cron('45 * * * * *')
+  async indexScheduledPublishedPosts() {
+    const scheduledPublishedPosts =
+      await this.prismaService.spaceIndexedPost.findMany({
+        where: {
+          scheduled: true,
+          scheduledToDate: {
+            lte: new Date(),
+          },
+        },
+      });
+    console.log(
+      'Indexing scheduled published posts',
+      scheduledPublishedPosts.map((p) => p.id),
+    );
+    for (const post of scheduledPublishedPosts) {
+      await this.indexPost(post.spaceId, post.slug);
+      await this.prismaService.spaceIndexedPost.update({
+        where: {
+          id: post.id,
+        },
+        data: {
+          scheduled: false,
+        },
+      });
+    }
+  }
+
+  async createScheduledPost(dto: CreateScheduledPostDto) {
+    const space = await this.spaceService.findOne(dto.spaceId);
+    if (!space) {
+      throw new Error('Space not found');
+    }
+    return this.prismaService.spaceIndexedPost.create({
+      data: {
+        spaceId: space.id,
+        title: dto.title,
+        cover: dto.cover,
+        slug: dto.slug,
+        authorAddress: dto.authorAddress,
+        scheduled: true,
+        scheduledCid: dto.cid,
+        scheduledToDate: new Date(dto.date),
+        content: dto.content,
+      },
+    });
+  }
+
   async getPosts(
+    user: User | null,
     filter: FindAllPostsFilterDto,
     pageOptions: { page: number; perPage: number } = { page: 1, perPage: 10 },
   ) {
-    const where = filter.spaceId ? { spaceId: filter.spaceId } : {};
+    const where: Prisma.SpaceIndexedPostWhereInput = {};
+    if (filter.spaceId) {
+      where.space = {
+        slug: filter.spaceId,
+      };
+    }
+
+    applyPostWhereFilterFromUserContext(user, where);
+
     return this.prismaService.spaceIndexedPost.findMany({
       where,
       take: pageOptions.perPage,
@@ -78,14 +165,18 @@ export class PostsService {
     });
   }
 
-  async getPostBySlugs(spaceSlug: string, postSlug: string) {
-    return this.prismaService.spaceIndexedPost.findFirst({
-      where: {
-        slug: postSlug,
-        space: {
-          slug: spaceSlug,
-        },
+  async getPostBySlugs(user: User | null, spaceSlug: string, postSlug: string) {
+    const where: Prisma.SpaceIndexedPostWhereInput = {
+      slug: postSlug,
+      space: {
+        slug: spaceSlug,
       },
+    };
+
+    applyPostWhereFilterFromUserContext(user, where);
+
+    return this.prismaService.spaceIndexedPost.findFirst({
+      where,
     });
   }
 }

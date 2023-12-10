@@ -30,6 +30,7 @@ export class SpacesService {
     return this.prismaService.space.create({
       data: {
         ...input,
+        address: input.address.toLowerCase(),
         ownerId: user.id,
       },
     });

@@ -14,10 +14,12 @@ export const LoggedContainer: FC<LoggedContainerProps> = ({ children }) => {
   const account = useAccount();
   const { signIn, isLoading: signInLoading } = useSignIn();
   const loading = meLoading || signInLoading;
+  console.log(account);
 
   if (!loading && me && account?.address) {
     return children;
   }
+
 
   return (
     <div className="w-screen h-screen flex items-center justify-center">

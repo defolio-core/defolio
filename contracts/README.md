@@ -1,13 +1,15 @@
-# Sample Hardhat Project
+# DeFolio Contracts Project
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+Smart Contracts for the DeFolio
 
-Try running some of the following tasks:
+### Deploying the Scheduler Contract
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
+```bash
+npx hardhat deploy:scheduler
+```
+
+### Deploying the Factory Contract
+
+```bash
+npx hardhat deploy:factory --scheduler <SCHEDULER_CONTRACT_ADDRESS>
 ```

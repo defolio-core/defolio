@@ -22,7 +22,35 @@ export const deFolioSpaceABI = [
   {
     stateMutability: 'nonpayable',
     type: 'constructor',
-    inputs: [{ name: '_owner', internalType: 'address', type: 'address' }],
+    inputs: [
+      { name: '_owner', internalType: 'address', type: 'address' },
+      { name: '_scheduler', internalType: 'address', type: 'address' },
+    ],
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+    ],
+    name: 'OwnershipTransferRequested',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+    ],
+    name: 'OwnershipTransferred',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'acceptOwnership',
+    outputs: [],
   },
   {
     stateMutability: 'nonpayable',
@@ -80,8 +108,30 @@ export const deFolioSpaceABI = [
     inputs: [
       { name: '_slug', internalType: 'string', type: 'string' },
       { name: '_ipfsCID', internalType: 'string', type: 'string' },
+      { name: '_scheduledToTime', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'publishPost',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'requestIdToSlug',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'scheduler',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: '_scheduler', internalType: 'address', type: 'address' }],
+    name: 'setScheduler',
     outputs: [],
   },
   {
@@ -101,6 +151,13 @@ export const deFolioSpaceABI = [
   {
     stateMutability: 'nonpayable',
     type: 'function',
+    inputs: [{ name: 'to', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
     inputs: [
       { name: '_postId', internalType: 'uint256', type: 'uint256' },
       { name: '_ipfsCID', internalType: 'string', type: 'string' },
@@ -115,6 +172,13 @@ export const deFolioSpaceABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const deFolioSpaceFactoryABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [
+      { name: '_defaultScheduler', internalType: 'address', type: 'address' },
+    ],
+  },
   {
     type: 'event',
     anonymous: false,
@@ -133,6 +197,13 @@ export const deFolioSpaceFactoryABI = [
       },
     ],
     name: 'ContractDeployed',
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'defaultScheduler',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
   },
   {
     stateMutability: 'nonpayable',
@@ -276,6 +347,52 @@ export function useDeFolioSpacePosts<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link deFolioSpaceABI}__ and `functionName` set to `"requestIdToSlug"`.
+ */
+export function useDeFolioSpaceRequestIdToSlug<
+  TFunctionName extends 'requestIdToSlug',
+  TSelectData = ReadContractResult<typeof deFolioSpaceABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof deFolioSpaceABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: deFolioSpaceABI,
+    functionName: 'requestIdToSlug',
+    ...config,
+  } as UseContractReadConfig<
+    typeof deFolioSpaceABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link deFolioSpaceABI}__ and `functionName` set to `"scheduler"`.
+ */
+export function useDeFolioSpaceScheduler<
+  TFunctionName extends 'scheduler',
+  TSelectData = ReadContractResult<typeof deFolioSpaceABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof deFolioSpaceABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: deFolioSpaceABI,
+    functionName: 'scheduler',
+    ...config,
+  } as UseContractReadConfig<
+    typeof deFolioSpaceABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link deFolioSpaceABI}__ and `functionName` set to `"slugToPostId"`.
  */
 export function useDeFolioSpaceSlugToPostId<
@@ -348,6 +465,37 @@ export function useDeFolioSpaceWrite<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link deFolioSpaceABI}__ and `functionName` set to `"acceptOwnership"`.
+ */
+export function useDeFolioSpaceAcceptOwnership<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof deFolioSpaceABI,
+          'acceptOwnership'
+        >['request']['abi'],
+        'acceptOwnership',
+        TMode
+      > & { functionName?: 'acceptOwnership' }
+    : UseContractWriteConfig<
+        typeof deFolioSpaceABI,
+        'acceptOwnership',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'acceptOwnership'
+      } = {} as any,
+) {
+  return useContractWrite<typeof deFolioSpaceABI, 'acceptOwnership', TMode>({
+    abi: deFolioSpaceABI,
+    functionName: 'acceptOwnership',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link deFolioSpaceABI}__ and `functionName` set to `"archivePost"`.
  */
 export function useDeFolioSpaceArchivePost<
@@ -402,6 +550,64 @@ export function useDeFolioSpacePublishPost<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link deFolioSpaceABI}__ and `functionName` set to `"setScheduler"`.
+ */
+export function useDeFolioSpaceSetScheduler<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof deFolioSpaceABI,
+          'setScheduler'
+        >['request']['abi'],
+        'setScheduler',
+        TMode
+      > & { functionName?: 'setScheduler' }
+    : UseContractWriteConfig<typeof deFolioSpaceABI, 'setScheduler', TMode> & {
+        abi?: never
+        functionName?: 'setScheduler'
+      } = {} as any,
+) {
+  return useContractWrite<typeof deFolioSpaceABI, 'setScheduler', TMode>({
+    abi: deFolioSpaceABI,
+    functionName: 'setScheduler',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link deFolioSpaceABI}__ and `functionName` set to `"transferOwnership"`.
+ */
+export function useDeFolioSpaceTransferOwnership<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof deFolioSpaceABI,
+          'transferOwnership'
+        >['request']['abi'],
+        'transferOwnership',
+        TMode
+      > & { functionName?: 'transferOwnership' }
+    : UseContractWriteConfig<
+        typeof deFolioSpaceABI,
+        'transferOwnership',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'transferOwnership'
+      } = {} as any,
+) {
+  return useContractWrite<typeof deFolioSpaceABI, 'transferOwnership', TMode>({
+    abi: deFolioSpaceABI,
+    functionName: 'transferOwnership',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link deFolioSpaceABI}__ and `functionName` set to `"updatePost"`.
  */
 export function useDeFolioSpaceUpdatePost<
@@ -444,6 +650,22 @@ export function usePrepareDeFolioSpaceWrite<TFunctionName extends string>(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link deFolioSpaceABI}__ and `functionName` set to `"acceptOwnership"`.
+ */
+export function usePrepareDeFolioSpaceAcceptOwnership(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof deFolioSpaceABI, 'acceptOwnership'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: deFolioSpaceABI,
+    functionName: 'acceptOwnership',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof deFolioSpaceABI, 'acceptOwnership'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link deFolioSpaceABI}__ and `functionName` set to `"archivePost"`.
  */
 export function usePrepareDeFolioSpaceArchivePost(
@@ -476,6 +698,41 @@ export function usePrepareDeFolioSpacePublishPost(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link deFolioSpaceABI}__ and `functionName` set to `"setScheduler"`.
+ */
+export function usePrepareDeFolioSpaceSetScheduler(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof deFolioSpaceABI, 'setScheduler'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: deFolioSpaceABI,
+    functionName: 'setScheduler',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof deFolioSpaceABI, 'setScheduler'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link deFolioSpaceABI}__ and `functionName` set to `"transferOwnership"`.
+ */
+export function usePrepareDeFolioSpaceTransferOwnership(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof deFolioSpaceABI, 'transferOwnership'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: deFolioSpaceABI,
+    functionName: 'transferOwnership',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof deFolioSpaceABI,
+    'transferOwnership'
+  >)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link deFolioSpaceABI}__ and `functionName` set to `"updatePost"`.
  */
 export function usePrepareDeFolioSpaceUpdatePost(
@@ -489,6 +746,59 @@ export function usePrepareDeFolioSpaceUpdatePost(
     functionName: 'updatePost',
     ...config,
   } as UsePrepareContractWriteConfig<typeof deFolioSpaceABI, 'updatePost'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link deFolioSpaceABI}__.
+ */
+export function useDeFolioSpaceEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof deFolioSpaceABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: deFolioSpaceABI,
+    ...config,
+  } as UseContractEventConfig<typeof deFolioSpaceABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link deFolioSpaceABI}__ and `eventName` set to `"OwnershipTransferRequested"`.
+ */
+export function useDeFolioSpaceOwnershipTransferRequestedEvent(
+  config: Omit<
+    UseContractEventConfig<
+      typeof deFolioSpaceABI,
+      'OwnershipTransferRequested'
+    >,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: deFolioSpaceABI,
+    eventName: 'OwnershipTransferRequested',
+    ...config,
+  } as UseContractEventConfig<
+    typeof deFolioSpaceABI,
+    'OwnershipTransferRequested'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link deFolioSpaceABI}__ and `eventName` set to `"OwnershipTransferred"`.
+ */
+export function useDeFolioSpaceOwnershipTransferredEvent(
+  config: Omit<
+    UseContractEventConfig<typeof deFolioSpaceABI, 'OwnershipTransferred'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: deFolioSpaceABI,
+    eventName: 'OwnershipTransferred',
+    ...config,
+  } as UseContractEventConfig<typeof deFolioSpaceABI, 'OwnershipTransferred'>)
 }
 
 /**
@@ -512,6 +822,36 @@ export function useDeFolioSpaceFactoryRead<
 ) {
   return useContractRead({
     abi: deFolioSpaceFactoryABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof deFolioSpaceFactoryABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link deFolioSpaceFactoryABI}__ and `functionName` set to `"defaultScheduler"`.
+ */
+export function useDeFolioSpaceFactoryDefaultScheduler<
+  TFunctionName extends 'defaultScheduler',
+  TSelectData = ReadContractResult<
+    typeof deFolioSpaceFactoryABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof deFolioSpaceFactoryABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: deFolioSpaceFactoryABI,
+    functionName: 'defaultScheduler',
     ...config,
   } as UseContractReadConfig<
     typeof deFolioSpaceFactoryABI,

@@ -33,6 +33,7 @@ contract DeFolioSpace is IDeFolioSpace, ConfirmedOwner {
 
     constructor(address _owner, address _scheduler) ConfirmedOwner(_owner) {
         totalPosts = 0;
+        scheduler =_scheduler;
     }
 
     function publishPost(

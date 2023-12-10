@@ -4,6 +4,9 @@ dotenv.config();
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import 'hardhat-abi-exporter';
+import './tasks/deploy';
+import './tasks/scheduler';
+
 
 const config: HardhatUserConfig = {
   solidity: "0.8.19",
@@ -18,6 +21,10 @@ const config: HardhatUserConfig = {
     }
   ],
   networks: {
+    snowtrace: {
+      url: 'https://api.avax-test.network/ext/bc/C/rpc',
+      accounts: [process.env.TESTNET_PRIVATE_KEY as string]
+    },
     local: {
       url: process.env.LOCAL_URL,
       accounts: [process.env.LOCAL_PRIVATE_KEY as string],

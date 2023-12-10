@@ -14,6 +14,7 @@ import { User } from '@prisma/client';
 import { PostsService } from './posts.service';
 import { SpacesService } from '../spaces/spaces.service';
 import { FindAllPostsFilterDto } from './dto/find-all-posts-filter.dto';
+import { CreateScheduledPostDto } from './dto/create-scheduler-post.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -37,16 +38,35 @@ export class PostsController {
     return this.postsService.indexPost(input.spaceId, input.slug);
   }
 
+  @Post('/scheduled')
+  async createScheduledPost(
+    @LoggedUser() user: User,
+    @Body() input: CreateScheduledPostDto,
+  ) {
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    const space = await this.spacesService.findOne(input.spaceId);
+    if (space.ownerId !== user.id) {
+      throw new ForbiddenException();
+    }
+    return this.postsService.createScheduledPost(input);
+  }
+
   @Get()
-  async getPosts(@Query() query: FindAllPostsFilterDto): Promise<any> {
-    return this.postsService.getPosts(query);
+  async getPosts(
+    @LoggedUser() user: User,
+    @Query() query: FindAllPostsFilterDto,
+  ): Promise<any> {
+    return this.postsService.getPosts(user, query);
   }
 
   @Get('/:spaceSlug/:postSlug')
   async getPostBySlugs(
+    @LoggedUser() user: User,
     @Param('spaceSlug') spaceSlug: string,
     @Param('postSlug') postSlug: string,
   ): Promise<any> {
-    return this.postsService.getPostBySlugs(spaceSlug, postSlug);
+    return this.postsService.getPostBySlugs(user, spaceSlug, postSlug);
   }
 }

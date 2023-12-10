@@ -9,8 +9,7 @@ import "./interfaces/IDeFolioSpace.sol";
 
 contract DeFolioScheduler is
     AutomationCompatibleInterface,
-    ChainlinkClient,
-    ConfirmedOwner
+    ChainlinkClient
 {
     using Chainlink for Chainlink.Request;
     using Strings for uint256;
@@ -31,14 +30,15 @@ contract DeFolioScheduler is
     // Chainlink Config
     address private chainlinkTokenAddr = 0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846;
     address private chainlinkOracleAddr = 0x022EEA14A6010167ca026B32576D6686dD7e85d2;
-    string private defolioApiBaseUrl = "https://defolio.xyz/api";
+    string private defolioApiBaseUrl;
     bytes32 private jobId = "7d80a6386ef543a3abb52817f6707e3b";
     uint256 private fee = (1 * LINK_DIVISIBILITY) / 10;
 
     // Map Chainlink Request ID to PostSchedule id
     mapping(bytes32 => uint256) public requestIdToPostScheduleId;
 
-    constructor(address _owner) ConfirmedOwner(_owner) {
+    constructor(string memory _defolioApiBaseUrl) {
+        defolioApiBaseUrl = _defolioApiBaseUrl;
         // Chainlink Config
         setChainlinkToken(chainlinkTokenAddr);
         setChainlinkOracle(chainlinkOracleAddr);
@@ -90,7 +90,8 @@ contract DeFolioScheduler is
 
         PostSchedule memory postSchedule = postSchedules[postScheduleId];
         // Set the URL to perform the GET request on
-        req.add('get', string.concat(defolioApiBaseUrl, '/posts/', postSchedule.postSlug, '/cid'));
+        string memory spaceAddress = Strings.toHexString(uint256(uint160(postSchedule.spaceAddress)));
+        req.add('get', string.concat(defolioApiBaseUrl, '/chainlink/', spaceAddress, '/', postSchedule.postSlug));
         req.add('path', 'cid');
 
         // Sends the request
@@ -120,7 +121,7 @@ contract DeFolioScheduler is
     function performUpkeep(bytes calldata performData) external override {
         for (uint256 i = 1; i <= totalPostSchedules; i++) {
             if (_isReadyToBePublished(postSchedules[i])) {
-                // TODO: Fetch Post CID Here
+                fetchPostCid(i);
                 postSchedules[i].attempts++;
             }
         }
