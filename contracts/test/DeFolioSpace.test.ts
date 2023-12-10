@@ -86,9 +86,9 @@ describe('DeFolioSpace Contract', function () {
     expect(post.archived).to.equal(false);
     expect(post.scheduledToTime).to.equal(scheduledToTime);
 
-    expect(await DeFolioSpace.isSomePostReadyToBePublished()).to.be.false;
+    expect(await DeFolioSpace.checkPostsReadyToBePublished()).to.be.false;
     await time.increaseTo(scheduledToTime + 1);
-    expect(await DeFolioSpace.isSomePostReadyToBePublished()).to.be.true;
+    expect(await DeFolioSpace.checkPostsReadyToBePublished()).to.be.true;
   });
 
 });
