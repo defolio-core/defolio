@@ -11,13 +11,17 @@ contract DeFolioSpace is AutomationCompatibleInterface, ChainlinkClient, Confirm
     using Chainlink for Chainlink.Request;
     using Strings for uint256;
 
-    // address public owner;
-    uint256 public totalPosts;
-    uint256 public totalScheduledSlugs;
+    // Chainlink Config
+    address private chainlinkTokenAddr = 0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846;
+    address private chainlinkOracleAddr = 0x022EEA14A6010167ca026B32576D6686dD7e85d2;
+    string private defolioApiBaseUrl = "https://defolio.xyz/api";
+    bytes32 private jobId = "7d80a6386ef543a3abb52817f6707e3b";
+    uint256 private fee = (1 * LINK_DIVISIBILITY) / 10;
 
-    // chainlink
-    bytes32 private jobId;
-    uint256 private fee;
+
+    // DeFolio Variables
+
+    uint256 public totalPosts;
 
     struct Post {
         uint256 postId;
@@ -36,10 +40,8 @@ contract DeFolioSpace is AutomationCompatibleInterface, ChainlinkClient, Confirm
         totalPosts = 0;
         
         // Chainlink Config
-        setChainlinkToken(0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846);
-        setChainlinkOracle(0x022EEA14A6010167ca026B32576D6686dD7e85d2);
-        jobId = "7d80a6386ef543a3abb52817f6707e3b";
-        fee = (1 * LINK_DIVISIBILITY) / 10; // 0,1 * 10**18 (Varies by network and job)
+        setChainlinkToken(chainlinkTokenAddr);
+        setChainlinkOracle(chainlinkOracleAddr);
     }
 
     function publishPost(
@@ -123,7 +125,7 @@ contract DeFolioSpace is AutomationCompatibleInterface, ChainlinkClient, Confirm
         Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfillFetchPostCid.selector);
 
         // Set the URL to perform the GET request on
-        req.add('get', string.concat('https://defolio.xyz/api/posts/', slug, '/cid'));
+        req.add('get', string.concat(defolioApiBaseUrl, '/posts/', slug, '/cid'));
         req.add('path', 'cid');
 
         // Sends the request
