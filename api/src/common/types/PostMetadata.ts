@@ -3,4 +3,7 @@ export interface PostMetadata {
   slug: string;
   cover: string;
   content: string;
+  author?: {
+    address?: string;
+  };
 }

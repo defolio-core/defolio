@@ -9,7 +9,7 @@ import { getPostMetadata } from '../common/utils/postMetadata';
 import { FindAllPostsFilterDto } from './dto/find-all-posts-filter.dto';
 
 const DefolioSpaceAbiJson = fs.readFileSync(
-  path.join(__dirname, '../web3/abi/DeFolioSpace.json'),
+  path.join(__dirname, '../abi/DeFolioSpace.json'),
   'utf8',
 );
 
@@ -43,8 +43,10 @@ export class PostsService {
 
     const fields = {
       title: metadata.title,
+      cover: metadata.cover,
       content: metadata.content,
       slug: metadata.slug,
+      authorAddress: metadata.author?.address,
     };
 
     return this.prismaService.spaceIndexedPost.upsert({
@@ -73,6 +75,17 @@ export class PostsService {
       where,
       take: pageOptions.perPage,
       skip: pageOptions.perPage * (pageOptions.page - 1),
+    });
+  }
+
+  async getPostBySlugs(spaceSlug: string, postSlug: string) {
+    return this.prismaService.spaceIndexedPost.findFirst({
+      where: {
+        slug: postSlug,
+        space: {
+          slug: spaceSlug,
+        },
+      },
     });
   }
 }

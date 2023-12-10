@@ -3,6 +3,7 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  Param,
   Post,
   Query,
   UnauthorizedException,
@@ -39,5 +40,13 @@ export class PostsController {
   @Get()
   async getPosts(@Query() query: FindAllPostsFilterDto): Promise<any> {
     return this.postsService.getPosts(query);
+  }
+
+  @Get('/:spaceSlug/:postSlug')
+  async getPostBySlugs(
+    @Param('spaceSlug') spaceSlug: string,
+    @Param('postSlug') postSlug: string,
+  ): Promise<any> {
+    return this.postsService.getPostBySlugs(spaceSlug, postSlug);
   }
 }

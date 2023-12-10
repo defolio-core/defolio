@@ -9,7 +9,8 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { createPostMetadata } from '../../../utils/postMetadata';
 import { useMutation } from '@tanstack/react-query';
-import { indexPost } from '../../../client/mutations/spaces';
+import { indexPost } from '../../../client/mutations/posts';
+import { useAccount } from 'wagmi';
 
 export interface PostsCreateProps {
   
@@ -18,6 +19,7 @@ export interface PostsCreateProps {
 export const PostsCreate: FC<PostsCreateProps> = (props) => {
   const navigate = useNavigate();
   const { space } = useCurrentSpace();
+  const account = useAccount();
   const useIndexPostMutation = useMutation({
     mutationFn: (input: { spaceId: string; slug: string }) =>
       indexPost(input.spaceId, input.slug),
@@ -28,7 +30,12 @@ export const PostsCreate: FC<PostsCreateProps> = (props) => {
   const form = useForm<CreatePostFormFields>();
   const onSubmit = async (data: CreatePostFormFields) => {
 
-    const cid = await createPostMetadata(data);
+    const cid = await createPostMetadata({
+      ...data,
+      author: {
+        address: account.address,
+      }
+    });
 
     try {
       const tx = await contractPublishPost.writeAsync({
