@@ -73,12 +73,14 @@ export const Sidebar: FC<SidebarProps> = ({ open, setOpen, space }) => {
               </Link>
             </div>
           </div>
-          <nav className="px-2 space-y-1 mt-4">
+
+          <div className="p-4">
+            <Link className="btn btn-primary w-full" to="/app/posts/create">Create Post</Link>
+          </div>
+
+          <nav className="px-2 space-y-1 mt-2">
             {navigation.map(renderLink)}
           </nav>
-        </div>
-        <div className="flex-shrink-0 flex border-t border-t-gray-200 p-4 text-white">
-          TODO: Add User Info
         </div>
       </>
     );
