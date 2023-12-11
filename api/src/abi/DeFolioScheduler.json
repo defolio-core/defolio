@@ -126,6 +126,25 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "postScheduleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getApiCallUrl",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes",
         "name": "performData",
         "type": "bytes"

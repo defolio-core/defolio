@@ -18,4 +18,7 @@ export interface Post {
   content: string;
   authorAddress: string;
   spaceId: string;
+  space?: {
+    slug?: string;
+  }
 }

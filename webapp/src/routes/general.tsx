@@ -9,6 +9,8 @@ import { SpacesIndex } from "../pages/app/spaces/Index";
 import { SpacesCreate } from "../pages/app/spaces/SpacesCreate";
 import { PostsCreate } from '../pages/app/posts/PostsCreate';
 import { PostViewPage } from '../pages/PostViewPage';
+import { Settings } from '../pages/app/Settings';
+import { SpaceHome } from '../pages/SpaceHome';
 
 export const general: RouteObject[] = [
   // ROUTES - START
@@ -39,6 +41,14 @@ export const general: RouteObject[] = [
   {
     path: '/:spaceSlug/:postSlug',
     element: <PostViewPage />
+  },
+  {
+    path: '/app/settings',
+    element: <Settings />
+  },
+  {
+    path: '/:spaceSlug',
+    element: <SpaceHome />
   }
   // ROUTES - END
 ];

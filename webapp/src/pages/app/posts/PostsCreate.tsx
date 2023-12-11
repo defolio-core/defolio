@@ -59,7 +59,7 @@ export const PostsCreate: FC<PostsCreateProps> = (props) => {
         const tx = await contractPublishPost.writeAsync({
           args: [data.slug, "", BigInt(Math.floor(data.scheduledDate!.getTime() / 1000))]
         })
-        await waitForTransaction({ hash: tx.hash });
+        await waitForTransaction({ hash: tx.hash, timeout: 60000 });
         await createScheduledMutation.mutateAsync({
           title: data.title,
           cover: data.cover,

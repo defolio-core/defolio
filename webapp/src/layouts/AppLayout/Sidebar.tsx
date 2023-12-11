@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { HomeIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 import React, { FC, Fragment } from "react";
 import Logo from "../../assets/logo.png";
 import classNames from "classnames";
@@ -8,8 +8,6 @@ import {
   ArrowPathRoundedSquareIcon,
   Cog8ToothIcon,
   DocumentTextIcon,
-PencilIcon,
-PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { SpaceAvatar } from "../../components/SpaceAvatar";
 import { Space } from "../../client/types";
@@ -22,13 +20,8 @@ export interface SidebarProps {
 
 const navigation = [
   {
-    name: "Dashboard",
-    path: "/app",
-    icon: HomeIcon,
-  },
-  {
     name: "Posts",
-    path: "/app/posts",
+    path: "/app",
     icon: DocumentTextIcon,
   },
   {

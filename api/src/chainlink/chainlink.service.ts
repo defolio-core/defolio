@@ -20,7 +20,7 @@ export class ChainlinkService {
         slug: postSlug,
       },
     });
-    if (!post || post.scheduled) {
+    if (!post || post.scheduledToDate > new Date()) {
       throw new NotFoundException('Post not found');
     }
     return {

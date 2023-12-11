@@ -36,6 +36,32 @@ task("scheduler:checkupkeep", "Check Chainlink Upkeep")
       );
     });
 
+task("scheduler:callurl", "Check API Call URL")
+  .addParam("scheduler", "The Scheduler contract address")
+  .addParam("id", "The Post Schedule ID")
+  .setAction(async (args) => {
+      const scheduler = await ethers.getContractAt("DeFolioScheduler", args.scheduler);
+
+      await scheduler.waitForDeployment();
+
+      console.log(
+        await scheduler.getApiCallUrl(parseInt(args.id)),
+      );
+    });
+
+task("scheduler:fetchcid", "Fetch the CID of a post")
+.addParam("scheduler", "The Scheduler contract address")
+.addParam("id", "The Post Schedule ID")
+.setAction(async (args) => {
+    const scheduler = await ethers.getContractAt("DeFolioScheduler", args.scheduler);
+
+    await scheduler.waitForDeployment();
+
+    console.log(
+      await scheduler.fetchPostCid(parseInt(args.id)),
+    );
+  });
+
 task("scheduler:performupkeep", "Check Chainlink Upkeep")
   .addParam("scheduler", "The Scheduler contract address")
   .setAction(async (args) => {

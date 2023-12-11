@@ -78,6 +78,12 @@ contract DeFolioScheduler is
         return false;
     }
 
+    function getApiCallUrl(uint256 postScheduleId) public view returns (string memory) {
+        PostSchedule memory postSchedule = postSchedules[postScheduleId];
+        string memory spaceAddress = Strings.toHexString(uint256(uint160(postSchedule.spaceAddress)));
+        return string.concat(defolioApiBaseUrl, '/chainlink/', spaceAddress, '/', postSchedule.postSlug);
+    }
+
     // Chainlink API Fetch Functions
 
     /**
@@ -87,11 +93,7 @@ contract DeFolioScheduler is
      */
     function fetchPostCid(uint256 postScheduleId) public returns (bytes32) {
         Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfillFetchPostCid.selector);
-
-        PostSchedule memory postSchedule = postSchedules[postScheduleId];
-        // Set the URL to perform the GET request on
-        string memory spaceAddress = Strings.toHexString(uint256(uint160(postSchedule.spaceAddress)));
-        req.add('get', string.concat(defolioApiBaseUrl, '/chainlink/', spaceAddress, '/', postSchedule.postSlug));
+        req.add('get', getApiCallUrl(postScheduleId));
         req.add('path', 'cid');
 
         // Sends the request

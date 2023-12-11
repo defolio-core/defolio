@@ -152,7 +152,14 @@ export class PostsService {
     const where: Prisma.SpaceIndexedPostWhereInput = {};
     if (filter.spaceId) {
       where.space = {
-        slug: filter.spaceId,
+        OR: [
+          {
+            slug: filter.spaceId,
+          },
+          {
+            id: filter.spaceId,
+          },
+        ],
       };
     }
 
@@ -162,6 +169,9 @@ export class PostsService {
       where,
       take: pageOptions.perPage,
       skip: pageOptions.perPage * (pageOptions.page - 1),
+      include: {
+        space: true,
+      },
     });
   }
 
@@ -177,6 +187,9 @@ export class PostsService {
 
     return this.prismaService.spaceIndexedPost.findFirst({
       where,
+      include: {
+        space: true,
+      },
     });
   }
 }
