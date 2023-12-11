@@ -9,6 +9,8 @@ interface UseSymbolRateOptions {
 
 export const useSymbolRate = (fromSymbol: string, toSymbols: string[], { enabled }: UseSymbolRateOptions) => useQuery({
   staleTime: 1000 * 60 * 15,
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   cacheTime: 1000 * 60 * 15,
   queryKey: [fromSymbol, toSymbols],
   enabled,

@@ -16,7 +16,7 @@ export interface PostsCreateProps {
   
 }
 
-export const PostsCreate: FC<PostsCreateProps> = (props) => {
+export const PostsCreate: FC<PostsCreateProps> = () => {
   const navigate = useNavigate();
   const { space } = useCurrentSpace();
   const account = useAccount();

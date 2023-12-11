@@ -1,11 +1,11 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { AppLayout } from '../../layouts/AppLayout'
 
 export interface SettingsProps {
   
 }
 
-export const Settings: FC<SettingsProps> = (props) => {
+export const Settings: FC<SettingsProps> = () => {
   return (
     <AppLayout title="Settings">
       <div className="p-24 bg-white border rounded-lg text-center">

@@ -1,0 +1,49 @@
+services:
+  db:
+    container_name: defolio-db
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: defolio
+      POSTGRESQL_FSYNC: "off"
+      PGDATA: /data/postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./db-data:/data/postgres
+    restart: unless-stopped
+  api:
+    container_name: defolio-api
+    image: defolio-api
+    build:
+      context: ./api
+    env_file:
+      - ./.env-api
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./tmp:/usr/src/app/tmp
+  webapp:
+    container_name: defolio-webapp
+    image: defolio-webapp
+    build:
+      context: ./webapp
+      args:
+        - VITE_WEB3_STORAGE_TOKEN=${VITE_WEB3_STORAGE_TOKEN}
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+        - VITE_FACTORY_ADDRESS=${VITE_FACTORY_ADDRESS}
+  nginx:
+    container_name: defolio-nginx
+    image: defolio-nginx
+    build:
+      context: ./nginx
+    ports:
+      - 9090:80
+    depends_on:
+      - api
+      - webapp

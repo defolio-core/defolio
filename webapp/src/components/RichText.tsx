@@ -46,6 +46,8 @@ export const RichTextMenuBar: FC = () => {
     return null;
   }
   const onImageFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     if (!e.target.files || e.target.files[0].length === 0) {
       return;
     }

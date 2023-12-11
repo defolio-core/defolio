@@ -15,7 +15,7 @@ export const SpacesIndex: FC<SpacesIndexProps> = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [,setCurrentSpaceId] = useSpaceId();
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ['spaces'],
     queryFn: () => getSpaces(),
   });

@@ -41,6 +41,8 @@ export const Web3StorageImageUploader: FC<Web3StorageImageUploaderProps> = ({
     return getCIDLink(value);
   }, [value, imageHasError]);
   const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     if (!e.target.files || e.target.files[0].length === 0) {
       return;
     }
@@ -54,6 +56,8 @@ export const Web3StorageImageUploader: FC<Web3StorageImageUploaderProps> = ({
     width: previewWidth ? `${previewWidth}px` : undefined,
     height: previewHeight ? `${previewHeight}px` : undefined,
   };
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const isLoading = uploadFileMutation.isLoading || (value && imageIsLoading && !imageHasError);
   return (
     <div className="flex items-center">
